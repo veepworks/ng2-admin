@@ -1,7 +1,7 @@
 {
   "login": {
-    "title": "Sign in to ng2-admin",
-    "signup_link": "New to ng2-admin? Sign up!",
+    "title": "Sign in to Reckon Point",
+    "signup_link": "New to Reckon Point? Sign up!",
     "email": "Email",
     "password": "Password",
     "sign_in": "Sign in",
@@ -12,8 +12,8 @@
     "share_on_google_plus": "Share on Google Plus"
   },
   "register": {
-    "title": "Sign up to ng2-admin",
-    "signin_link": "Already have an ng2-admin account? Sign in!",
+    "title": "Sign up to Reckon Point",
+    "signin_link": "Already have a Reckon Point account? Sign in!",
     "name": "Name",
     "full_name": "Full Name",
     "email": "Email",
