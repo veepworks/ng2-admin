@@ -125,3 +125,21 @@ a.forgot-pass {
 .btn-auth {
   color: #ffffff!important;
 }
+
+hr.auth-divider {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
+}
+
+.auth-instructions {
+  ul li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+}

@@ -15,6 +15,10 @@ export const routes: Routes = [
     loadChildren: 'app/pages/register/register.module#RegisterModule'
   },
   {
+    path: 'forgotPassword',
+    loadChildren: 'app/pages/forgotPassword/forgotPassword.module#ForgotPasswordModule'
+  },
+  {
     path: 'pages',
     component: Pages,
     children: [

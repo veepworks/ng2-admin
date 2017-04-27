@@ -1,0 +1,30 @@
+<div class="auth-main">
+  <div class="auth-block">
+    <h1 translate>{{'forgotPassword.verifyAccount.title'}}</h1>
+    <a routerLink="/forgotPassword/createPassword" class="auth-link" translate>{{'forgotPassword.verifyAccount.create_password_link'}}</a>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
+      <div class="form-group row" [ngClass]="{'has-error': (!email.valid && email.touched), 'has-success': (email.valid && email.touched)}">
+        <label for="inputEmail3" class="col-sm-2 control-label" translate>{{'forgotPassword.verifyAccount.email'}}</label>
+
+        <div class="col-sm-10">
+          <input [formControl]="email" type="email" class="form-control" id="inputEmail3" placeholder="{{'forgotPassword.verifyAccount.email' | translate}}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="offset-sm-2 col-sm-10">
+          <button [disabled]="!form.valid" type="submit" class="btn btn-default btn-auth" translate>{{'forgotPassword.verifyAccount.button_text'}}</button>
+          <a routerLink="/login" class="forgot-pass" translate>{{'forgotPassword.verifyAccount.signin_link'}}</a>
+        </div>
+      </div>
+    </form>
+    <br /><hr class="auth-divider" />
+
+    <div class="al-share-auth auth-instructions">
+      <ul>
+        <li translate>{{'forgotPassword.verifyAccount.instructions.li1'}}</li>
+        <li translate>{{'forgotPassword.verifyAccount.instructions.li2'}}</li>
+      </ul>
+    </div>
+  </div>
+</div>

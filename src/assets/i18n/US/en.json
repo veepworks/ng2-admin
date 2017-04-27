@@ -25,6 +25,22 @@
     "share_on_twitter": "Share on Twitter",
     "share_on_google_plus": "Share on Google Plus"
   },
+  "forgotPassword": {
+    "verifyAccount": {
+      "title": "Verify Account",
+      "create_password_link": "Already have a verification code? Create your password!",
+      "email": "Email",
+      "button_text": "Submit",
+      "signin_link": "Sign in!",
+      "instructions": {
+        "li1": "Enter the email address linked to your account.",
+        "li2": "We will send you an email containing a verification code."
+      }
+    },
+    "createPassword": {
+      "title": "Create Password"
+    }
+  },
   "general": {
     "akveo": "Akveo",
     "home": "Home",
