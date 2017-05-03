@@ -14,8 +14,8 @@
   "register": {
     "title": "Sign up to Reckon Point",
     "signin_link": "Already have a Reckon Point account? Sign in!",
-    "name": "Name",
-    "full_name": "Full Name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
     "email": "Email",
     "password": "Password",
     "repeat_password": "Repeat",
