@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reckon Point</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+
+    <script type="text/javascript" src="https://sdk.amazonaws.com/js/aws-sdk-2.7.10.min.js"></script>
+    <script type="text/javascript" src="dist/mqttws31.min.js"></script>
+    <script type="text/javascript" src="dist/axios.js"></script>
+    <script type="text/javascript" src="dist/CryptoJS.rollups.js"></script>
+    <script type="text/javascript" src="dist/CryptoJS.components.js"></script>
+    <script type="text/javascript" src="dist/url-template.js"></script>
+    <script type="text/javascript" src="dist/apiGatewayCore.js"></script>
+    <script type="text/javascript" src="dist/jsbn.js"></script>
+    <script type="text/javascript" src="dist/sjcl.js"></script>
+    <script type="text/javascript" src="dist/cognito.js"></script>
+    <script type="text/javascript" src="dist/js.storage.min.js"></script>
+    <script type="text/javascript" src="dist/moment.min.js"></script>
+    <script type="text/javascript" src="dist/turf.min.js"></script>
+    <script type="text/javascript" src="dist/jquery.js"></script>
+
+    script type"text/javascript" src="../../../../../"
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+    <script type="text/javascript" src="dist/leaflet.awesome-markers.min.js"></script>
+
+    <script type="text/javascript" src="lib/reckonPoint/reckonpoint.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/utils.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/mqtt.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/apiGatewayClient.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/cognitoIdentity.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/cognitoUser.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/reckonPointApiClient.js"></script>
+
+    <script type="text/javascript" src="lib/reckonPoint/l-reckonpoint-map.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/l-reckonpoint-control.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/l-reckonpoint-marker.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/l-reckonpoint-geojson.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/l-reckonpoint-handler.js"></script>
+    <script type="text/javascript" src="lib/reckonPoint/l-reckonpoint-factory.js"></script>
+
+    <link rel="stylesheet" href="css/leaflet.awesome-markers.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <script>
+        var layer;
+        var apiClient;
+
+        //reckonPoint.loader.applyOptions({sdkPath:'lib/reckonPoint'}).initialize();
+
+        //console.log('here/path/to/this/'.replace(/^\/|\/$/g, ''));
+
+        const geojsonFeature =  {
+            "id": "device",
+            "type": "Feature",
+            "properties": {
+                "deviceId": "709e2b81-4a78-47a0-a2e6-bd3693ebd416",
+                "deviceType": "cell",
+                "buildingId": 7546,
+                "levelId": 847646,
+                "wifiCoordinates": [-104.99404, 39.75621],
+                "magCoordinates": [-104.99404, 39.75621]
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [-98.6007202892, 29.5662143438]
+            }
+        };
+
+        function init() {
+            apiClient = reckonPointApi.newClient({
+                identityPoolId: 'us-east-1:abe99555-0e55-4888-8649-28754bbf45ca'
+            });
+
+            const mapMinZoom = 16;
+            const mapMaxZoom = 23;
+
+            const map = L.reckonPoint.map('map', {
+              maxZoom: mapMaxZoom,
+              minZoom: mapMinZoom,
+              mqttStateControl: true,
+              mqttMessageHandler: true,
+              newMessageHandler: true,
+              jsonMessageHandler: true,
+              geoJsonMessageHandler: true
+            })
+            .setView([29.56612,-98.60072], 18);
+
+            const mqttClient = new reckonPoint.mqtt.WebSocketClient('awsIotClient');
+
+            mqttClient.on('connected', function(event, data) {
+                map.fire('mqttstatechange', {state: data.state});
+                mqttClient.subscribe('devices/+');
+            })
+            .on('connect_failed', function(event, data) {
+                map.fire('mqttstatechange', {state: data.state});
+            })
+            .on('connection_lost', function(event, data) {
+                map.fire('mqttstatechange', {state: data.state});
+            })
+            .on('connection_error', function(event, data) {
+                map.fire('mqttstatechange', {state: data.state});
+            })
+            .on('new_message', function(event, message) {
+                console.log('new_message');
+                console.log(message);
+                map.fire('new_messagereceived', message);
+            });
+
+            mqttClient.connect();
+
+            // var redMarker = L.AwesomeMarkers.icon({
+            //     prefix: 'fa',
+            //     icon: 'user-circle',
+            //     markerColor: 'red',
+            //     className: 'awesome-marker'
+            // });
+            //
+            // var m1 = L.marker([29.566315000,-98.6008203000]).addTo(map);
+            //
+            // var m2 = L.marker([29.5662143438,-98.6007202892], {icon: redMarker}).addTo(map);
+
+            var mapBounds = new L.LatLngBounds(
+                new L.LatLng(29.565988, -98.600736),
+                new L.LatLng(29.566267, -98.600586));
+
+            map.createPane('background');
+            map.getPane('background').style.zIndex = 100;
+
+            var background = L.rectangle([
+                [29.587940, -98.662222],
+                [29.496653, -98.506259]
+            ], {
+                interactive: false,
+                stroke: false,
+                fill: true,
+                fillColor: '#1a1a1a',
+                fillOpacity: 1.0,
+                pane: 'background'
+            });
+
+            var backgroundAdded = false;
+
+            map.on('zoom', function(e) {
+                if(!backgroundAdded && e.target.getZoom() > 18) {
+                    background.addTo(map);
+                    backgroundAdded = true;
+                } else if(backgroundAdded && e.target.getZoom() < 19) {
+                    background.removeFrom(map);
+                    backgroundAdded = false;
+                }
+            })
+
+            L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                subdomains: ['a','b','c'],
+                minZoom: 10,
+                maxZoom: 18
+            }).addTo(map);
+
+            layer = L.tileLayer('maps/wisewear/{z}/{x}/{y}.png', {
+                minZoom: mapMinZoom,
+                maxZoom: mapMaxZoom,
+                bounds: mapBounds,
+                opacity: 0.85
+            }).addTo(map);
+        }
+    </script>
+    <style>
+      html, body, #map { width:100%; height:100%; margin:0; padding:0; z-index: 1; }
+      #slider{ position: absolute; top: 10px; right: 10px; z-index: 5; }
+    </style>
+  </head>
+  <body onload="init()">
+    <div id="map"></div>
+    <input id="slider" type="range" min="0" max="1" step="0.1" value="1" oninput="layer.setOpacity(this.value)">
+  </body>
+</html>

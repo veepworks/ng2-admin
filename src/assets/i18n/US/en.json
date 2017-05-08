@@ -38,7 +38,13 @@
       }
     },
     "createPassword": {
-      "title": "Create Password"
+      "title": "Create Password",
+      "email": "Email",
+      "verificationCode_label": "Code",
+      "verificationCode": "Verification Code",
+      "password": "Password",
+      "repeat_password": "Repeat",
+      "button_text": "Submit"
     }
   },
   "general": {
