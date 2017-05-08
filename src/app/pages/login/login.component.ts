@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Router }  from '@angular/router';
+import { LoginService } from './login.service';
+import { Observable } from 'rxjs';
 
 import 'style-loader!./login.scss';
 
@@ -14,9 +17,9 @@ export class Login {
   public password: AbstractControl;
   public submitted: boolean = false;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder, private loginService: LoginService, private router: Router) {
     this.form = fb.group({
-      'email': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+      'email': ['', Validators.compose([Validators.required, Validators.minLength(4), Validators.email])],
       'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
     });
 
@@ -27,8 +30,16 @@ export class Login {
   public onSubmit(values: Object): void {
     this.submitted = true;
     if (this.form.valid) {
-      // your code goes here
-      // console.log(values);
+     let observable: Observable<boolean> = this.loginService.authenticate(this.email.value, this.password.value);
+      observable.subscribe(
+        result => {
+          if(result) {
+            this.router.navigate(['']);
+          }
+        },
+        error => console.error('Login error!', error),
+        () => console.log('Login result complete')
+      )
     }
   }
 }

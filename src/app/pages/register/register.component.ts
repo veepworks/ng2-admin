@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
+import {Injectable, Inject} from "@angular/core";
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import {EmailValidator, EqualPasswordsValidator} from '../../theme/validators';
+import {RegisterService, RegisterServiceCallback, User} from './register.service';
 
 import 'style-loader!./register.scss';
 
@@ -8,7 +10,7 @@ import 'style-loader!./register.scss';
   selector: 'register',
   templateUrl: './register.html',
 })
-export class Register {
+export class Register implements RegisterServiceCallback {
 
   public form:FormGroup;
   public givenName:AbstractControl;
@@ -20,7 +22,7 @@ export class Register {
 
   public submitted:boolean = false;
 
-  constructor(fb:FormBuilder) {
+  constructor(fb:FormBuilder, private service:RegisterService) {
 
     this.form = fb.group({
       'givenName': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -45,6 +47,17 @@ export class Register {
     if (this.form.valid) {
       // your code goes here
       console.log(values);
+
+      this.service.register({
+        givenName: this.givenName.value,
+        familyName: this.familyName.value,
+        password: this.password.value,
+        email: this.email.value
+      }, this);
     }
+  }
+
+  public cognitoCallback(message: string, result: any):void {
+
   }
 }

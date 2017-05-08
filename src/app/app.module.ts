@@ -20,14 +20,18 @@ import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
 import { PagesModule } from './pages/pages.module';
 
-import { CognitoUtil } from './services/aws-cognito.service'
+import { AppConfig } from './app.config';
+import { CognitoService } from './services/aws-cognito.service';
+import { AwsService } from './services/aws-core.service';
 
 
 // Application wide providers
 const APP_PROVIDERS = [
   AppState,
+  AppConfig,
   GlobalState,
-  CognitoUtil
+  AwsService,
+  CognitoService
 ];
 
 export type StoreType = {

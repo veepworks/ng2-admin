@@ -30,6 +30,7 @@
     "chart.js": "1.1.1",
     "chartist": "0.10.1",
     "ckeditor": "4.6.2",
+    "config": "^1.26.1",
     "core-js": "2.4.1",
     "easy-pie-chart": "2.1.7",
     "font-awesome": "4.7.0",
