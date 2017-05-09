@@ -86,4 +86,14 @@ export class AuthService implements CanActivate {
 
     }
 
+    logout() {
+        console.log("AuthService: signOut");
+
+        let currentUser = this.cognitoService.getCurrentUser();
+        if(currentUser != null) {
+            currentUser.signOut()
+        }
+        
+    }
+
 }

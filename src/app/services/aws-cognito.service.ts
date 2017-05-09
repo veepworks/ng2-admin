@@ -191,11 +191,6 @@ export class CognitoService {
         });
     }
     
-    logout() {
-        console.log("UserLoginService: Logging out");
-        //this.ddb.writeLogEntry("logout");
-        this.getCurrentUser().signOut();
-    }
 }
 
 @Injectable()
